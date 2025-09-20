@@ -1,0 +1,67 @@
+version: '3.7'
+services:
+  # 1. Zookeeper (Kafka prerequisite)
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  # 2. Kafka Broker (Không cần sửa)
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+  # 3. Kafka Connect (Không cần sửa)
+  connect:
+    image: debezium/connect:2.3
+    hostname: connect
+    depends_on:
+      - kafka
+      - mongodb
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+      KAFKA_OPTS: -Dkafka.server.listeners=PLAINTEXT://:9092 -Dplugin.path=/kafka/connect/debezium-connector-mongodb/
+
+  # 4. MongoDB Database (Đã sửa đổi)
+  mongodb:
+    image: mongo:6.0
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    command: mongod --replSet rs0 --bind_ip_all
+    healthcheck:
+      # SỬA ĐỔI: Thay 'localhost:27017' bằng 'mongodb:27017' (hostname trong mạng Docker)
+      test: ["CMD", "mongosh", "--eval", "rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]})"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mongo_data:
