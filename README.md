@@ -2,9 +2,6 @@
 
 # Hệ thống làm giàu dữ liệu thời gian thực
 
-![Banner](https://via.placeholder.com/800x200.png?text=Hệ+thống+làm+giàu+dữ+liệu+thời+gian+thực)  
-*Hình ảnh minh họa hệ thống (thay thế bằng hình ảnh thực tế nếu có)*
-
 ## 🚀 Giới thiệu
 
 Dự án này mô phỏng một hệ thống làm giàu dữ liệu thời gian thực sử dụng **MongoDB**, **Debezium**, **Kafka**, và **Python**.  
