@@ -177,46 +177,13 @@ data_enrichment_system/
 
     **Kỳ vọng**: Thấy các thông điệp JSON từ Debezium.
 
----
+12. **Clean hệ thống**:
 
-## Lưu ý
-
-- Timestamp trong MongoDB được lưu ở múi giờ +07:00 (ICT) nhờ sử dụng `pytz` trong `transaction_streamer.py`.
-- Nếu gặp lỗi `getaddrinfo failed`, kiểm tra `docker-compose.yml` để đảm bảo port mapping (`27017:27017`, `9093:9093`, `8083:8083`).
-- Nếu topic `cdc.mydatabase.transactions` rỗng, kiểm tra log `connect` và trạng thái replica set MongoDB.
-
----
-
-## Khắc phục sự cố
-
-- **Connector không chạy**:
-  - Đảm bảo plugin `debezium-connector-mongodb` đã cài trong container `connect`:
+    Sau khi chạy demo xong, bạn có thể dọn dẹp tài nguyên để tránh chiếm dung lượng:
+    
     ```bash
-    docker exec -it connect bash
-    ls /kafka/connect
+    docker-compose down -v
     ```
-  - Cài lại plugin nếu cần:
-    ```bash
-    curl -O https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/2.3.0.Final/debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    tar -xzf debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz -C /kafka/connect
-    rm debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    exit
-    docker-compose restart connect
-    ```
-
-- **Không có dữ liệu trong topic**:
-  - Reset offset consumer group:
-    ```bash
-    docker exec -it connect /kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:9092 --group enrichment_group --reset-offsets --to-earliest --topic cdc.mydatabase.transactions --execute
-    ```
-
-- **Collection `enriched_transactions` rỗng**:
-  - Thêm debug vào `stream_processor.py`:
-    ```python
-    print(f"Received message: {message.value}")
-    ```
-  - Kiểm tra topic và log `connect`.
-
 ---
 
 ## Công nghệ sử dụng
