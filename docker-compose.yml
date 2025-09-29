@@ -1,19 +1,17 @@
 version: '3.7'
 services:
-  # 1. Zookeeper (Kafka prerequisite)
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
-    hostname: zookeeper
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  # 2. Kafka Broker (Không cần sửa)
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    hostname: kafka
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
@@ -29,10 +27,9 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
 
-  # 3. Kafka Connect (Không cần sửa)
   connect:
     image: debezium/connect:2.3
-    hostname: connect
+    container_name: connect
     depends_on:
       - kafka
       - mongodb
@@ -46,22 +43,33 @@ services:
       STATUS_STORAGE_TOPIC: connect_statuses
       KAFKA_OPTS: -Dkafka.server.listeners=PLAINTEXT://:9092 -Dplugin.path=/kafka/connect/debezium-connector-mongodb/
 
-  # 4. MongoDB Database (Đã sửa đổi)
   mongodb:
     image: mongo:6.0
-    hostname: mongodb
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
     command: mongod --replSet rs0 --bind_ip_all
     healthcheck:
-      # SỬA ĐỔI: Thay 'localhost:27017' bằng 'mongodb:27017' (hostname trong mạng Docker)
-      test: ["CMD", "mongosh", "--eval", "rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongodb:27017'}]})"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 5s
       timeout: 10s
       retries: 5
       start_period: 20s
+  python-app:
+    image: python:3.9
+    container_name: python-app
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: tail -f /dev/null
+    depends_on:
+      - mongodb
+      - kafka
+      - connect
+    networks:
+      - default
 
 volumes:
   mongo_data:

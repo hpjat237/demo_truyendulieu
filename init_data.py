@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = "mongodb://mongodb:27017/"
 DB_NAME = "mydatabase"
 
 # Dữ liệu tĩnh người dùng

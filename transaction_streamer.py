@@ -3,7 +3,7 @@ import random
 from pymongo import MongoClient
 from datetime import datetime
 
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = "mongodb://mongodb:27017/"
 DB_NAME = "mydatabase"
 TRANSACTIONS_COLLECTION = "transactions"
 
