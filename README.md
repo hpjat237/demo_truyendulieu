@@ -126,12 +126,14 @@ data_enrichment_system/
 
    **Kỳ vọng**: Chèn 3 bản ghi (Alice, Bob, Charlie) vào `mydatabase.users`.
    
+<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/05091b92-dcfe-4142-99aa-66b35a41773e" />
 
 9. **Giả lập luồng giao dịch** (mở terminal riêng):
 
    ```bash
    docker exec -it python-app python /app/transaction_streamer.py
    ```
+<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/4ebbd6d1-b1a7-492b-aedc-b9cf52255813" />
 
    **Kỳ vọng**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
 
@@ -140,6 +142,7 @@ data_enrichment_system/
    ```bash
    docker exec -it python-app python /app/stream_processor.py
    ```
+<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/2f39194b-3a03-4f78-908a-f2d4857564f2" />
 
    **Kỳ vọng**: Đọc dữ liệu từ topic `cdc.mydatabase.transactions`, làm giàu, và lưu vào `mydatabase.enriched_transactions`.
 
