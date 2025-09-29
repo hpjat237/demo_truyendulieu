@@ -2,32 +2,32 @@
 
 # Hệ thống làm giàu dữ liệu thời gian thực
 
-## 🚀 Giới thiệu
+## Giới thiệu
 
 Dự án này mô phỏng một hệ thống làm giàu dữ liệu thời gian thực sử dụng **MongoDB**, **Debezium**, **Kafka**, và **Python**.  
 Nguồn dữ liệu giao dịch được giả lập qua script `transaction_streamer.py`, gửi đến MongoDB, được Debezium theo dõi thay đổi và truyền qua Kafka, sau đó được làm giàu bằng thông tin tĩnh từ MongoDB và lưu vào collection mới.
 
 ---
 
-## 📑 Mục lục
+## Mục lục
 
-- [📋 Mô tả hệ thống](#-mô-tả-hệ-thống)
-- [🔹 Luồng chạy demo](#-luồng-chạy-demo)
-- [📋 Cấu trúc dự án](#-cấu-trúc-dự-án)
-- [🔹 Yêu cầu](#-yêu-cầu)
-- [📥 Cài đặt và chạy demo](#-cài-đặt-và-chạy-demo)
+- [Mô tả hệ thống](#-mô-tả-hệ-thống)
+- [Luồng chạy demo](#-luồng-chạy-demo)
+- [Cấu trúc dự án](#-cấu-trúc-dự-án)
+- [Yêu cầu](#-yêu-cầu)
+- [Cài đặt và chạy demo](#-cài-đặt-và-chạy-demo)
   - [Cài đặt môi trường](#cài-đặt-môi-trường)
   - [Đăng ký Debezium Connector](#đăng-ký-debezium-connector)
   - [Chạy các script Python](#chạy-các-script-python)
   - [Kiểm tra kết quả](#kiểm-tra-kết-quả)
-- [🔹 Lưu ý](#-lưu-ý)
-- [🔹 Khắc phục sự cố](#-khắc-phục-sự-cố)
-- [🔹 Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-- [📧 Liên hệ](#-liên-hệ)
+- [Lưu ý](#-lưu-ý)
+- [Khắc phục sự cố](#-khắc-phục-sự-cố)
+- [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
+- [Liên hệ](#-liên-hệ)
 
 ---
 
-## 📋 Mô tả hệ thống
+## Mô tả hệ thống
 
 Hệ thống bao gồm các thành phần chính:
 
@@ -37,12 +37,9 @@ Hệ thống bao gồm các thành phần chính:
 - **Python**: Các script để chèn dữ liệu, tạo giao dịch giả lập, và làm giàu dữ liệu.
 - **Kafka Connect**: Chạy connector Debezium để kết nối MongoDB với Kafka.
 
-![System Architecture](https://via.placeholder.com/600x300.png?text=Kiến+trúc+hệ+thống)  
-*Hình ảnh kiến trúc hệ thống (thay thế bằng hình ảnh thực tế nếu có)*
-
 ---
 
-## 🔹 Luồng chạy demo
+## Luồng chạy demo
 
 Hệ thống hoạt động theo các bước sau:
 
@@ -54,7 +51,7 @@ Hệ thống hoạt động theo các bước sau:
 
 ---
 
-## 📋 Cấu trúc dự án
+## Cấu trúc dự án
 
 ```
 data_enrichment_system/
@@ -68,7 +65,7 @@ data_enrichment_system/
 
 ---
 
-## 🔹 Yêu cầu
+## Yêu cầu
 
 - **Git**: Để clone dự án.
 - **Docker & Docker Compose**: Chạy các container MongoDB, Kafka, và Python.
@@ -77,7 +74,7 @@ data_enrichment_system/
 
 ---
 
-## 📥 Cài đặt và chạy demo
+## Cài đặt và chạy demo
 
 ### Cài đặt môi trường
 
@@ -87,9 +84,6 @@ data_enrichment_system/
    git clone https://github.com/your_username/data_enrichment_system.git
    cd data_enrichment_system
    ```
-
-   ![Clone Project](https://via.placeholder.com/600x200.png?text=Clone+Project)  
-   *Hình ảnh minh họa clone dự án*
 
 2. **Khởi động các container**:
 
@@ -149,11 +143,9 @@ data_enrichment_system/
    ```
 
    **Kỳ vọng**: Chèn 3 bản ghi (Alice, Bob, Charlie) vào `mydatabase.users`.
+   
 
-   ![Init Data](https://via.placeholder.com/600x200.png?text=Chèn+dữ+liệu+tĩnh)  
-   *Hình ảnh minh họa chạy init_data.py*
-
-8. **Giả lập luồng giao dịch** (mở terminal riêng):
+9. **Giả lập luồng giao dịch** (mở terminal riêng):
 
    ```bash
    docker exec -it python-app python /app/transaction_streamer.py
@@ -161,7 +153,7 @@ data_enrichment_system/
 
    **Kỳ vọng**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
 
-9. **Làm giàu dữ liệu** (mở terminal riêng):
+10. **Làm giàu dữ liệu** (mở terminal riêng):
 
    ```bash
    docker exec -it python-app python /app/stream_processor.py
@@ -169,8 +161,6 @@ data_enrichment_system/
 
    **Kỳ vọng**: Đọc dữ liệu từ topic `cdc.mydatabase.transactions`, làm giàu, và lưu vào `mydatabase.enriched_transactions`.
 
-   ![Stream Processor](https://via.placeholder.com/600x200.png?text=Làm+giàu+dữ+liệu)  
-   *Hình ảnh minh họa chạy stream_processor.py*
 
 ### Kiểm tra kết quả
 
@@ -193,8 +183,6 @@ data_enrichment_system/
     - `transactions`: Các giao dịch với timestamp +07:00.
     - `enriched_transactions`: Dữ liệu làm giàu với `user_name` và `user_city`.
 
-    ![MongoDB Check](https://via.placeholder.com/600x200.png?text=Kiểm+tra+MongoDB)  
-    *Hình ảnh minh họa dữ liệu MongoDB*
 
 11. **Kiểm tra dữ liệu trong Kafka topic**:
 
@@ -206,7 +194,7 @@ data_enrichment_system/
 
 ---
 
-## 🔹 Lưu ý
+## Lưu ý
 
 - Timestamp trong MongoDB được lưu ở múi giờ +07:00 (ICT) nhờ sử dụng `pytz` trong `transaction_streamer.py`.
 - Nếu gặp lỗi `getaddrinfo failed`, kiểm tra `docker-compose.yml` để đảm bảo port mapping (`27017:27017`, `9093:9093`, `8083:8083`).
@@ -214,7 +202,7 @@ data_enrichment_system/
 
 ---
 
-## 🔹 Khắc phục sự cố
+## Khắc phục sự cố
 
 - **Connector không chạy**:
   - Đảm bảo plugin `debezium-connector-mongodb` đã cài trong container `connect`:
@@ -246,7 +234,7 @@ data_enrichment_system/
 
 ---
 
-## 🔹 Công nghệ sử dụng
+## Công nghệ sử dụng
 
 - **MongoDB**: 6.0
 - **Kafka**: Confluent 7.4.0
