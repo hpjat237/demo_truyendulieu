@@ -64,7 +64,7 @@ data_enrichment_system/
 
    ```bash
    git clone https://github.com/hpjat237/demo_truyendulieu.git
-   cd data_enrichment_system
+   cd demo_truyendulieu
    ```
 
 2. **Khởi động các container**:
