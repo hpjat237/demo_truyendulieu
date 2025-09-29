@@ -9,24 +9,6 @@ Nguồn dữ liệu giao dịch được giả lập qua script `transaction_str
 
 ---
 
-## Mục lục
-
-- [Mô tả hệ thống](#-mô-tả-hệ-thống)
-- [Luồng chạy demo](#-luồng-chạy-demo)
-- [Cấu trúc dự án](#-cấu-trúc-dự-án)
-- [Yêu cầu](#-yêu-cầu)
-- [Cài đặt và chạy demo](#-cài-đặt-và-chạy-demo)
-  - [Cài đặt môi trường](#cài-đặt-môi-trường)
-  - [Đăng ký Debezium Connector](#đăng-ký-debezium-connector)
-  - [Chạy các script Python](#chạy-các-script-python)
-  - [Kiểm tra kết quả](#kiểm-tra-kết-quả)
-- [Lưu ý](#-lưu-ý)
-- [Khắc phục sự cố](#-khắc-phục-sự-cố)
-- [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-- [Liên hệ](#-liên-hệ)
-
----
-
 ## Mô tả hệ thống
 
 Hệ thống bao gồm các thành phần chính:
