@@ -12,7 +12,7 @@ def stream_transactions():
     db = client[DB_NAME]
     transactions_collection = db[TRANSACTIONS_COLLECTION]
     
-    print("⏳ Bắt đầu giả lập luồng giao dịch...")
+    print("Bắt đầu giả lập luồng giao dịch...")
 
     while True:
         # Giả lập giao dịch
@@ -25,7 +25,7 @@ def stream_transactions():
         # Chèn vào MongoDB
         transactions_collection.insert_one(transaction)
         
-        print(f"➡️ Giao dịch mới: User ID {transaction['user_id']}, Amount: {transaction['amount']}")
+        print(f"Giao dịch mới: User ID {transaction['user_id']}, Amount: {transaction['amount']}")
 
         # Chờ 1 giây cho giao dịch tiếp theo
         time.sleep(1)

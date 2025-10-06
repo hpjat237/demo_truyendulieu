@@ -20,7 +20,7 @@ def initialize_data():
     users_collection.delete_many({})
     users_collection.insert_many(user_data)
 
-    print(f"✅ Đã chèn {len(user_data)} bản ghi vào collection 'users'.")
+    print(f"Đã chèn {len(user_data)} bản ghi vào collection 'users'.")
     client.close()
 
 if __name__ == "__main__":

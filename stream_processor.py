@@ -29,18 +29,18 @@ def process_stream():
         group_id=GROUP_ID,
         value_deserializer=lambda x: json.loads(x.decode('utf-8'))
     )
-    print(f"🔄 Đã kết nối Kafka consumer đến {KAFKA_BROKER}, topic: {CDC_TOPIC}")
+    print(f"Đã kết nối Kafka consumer đến {KAFKA_BROKER}, topic: {CDC_TOPIC}")
 
     for message in consumer:
-        print(f"📩 Nhận được thông điệp: {message.value}")
+        print(f"Nhận được thông điệp: {message.value}")
         try:
             payload = message.value  # Sửa: Không cần .get('payload')
             if not payload or payload.get('op') != 'c':
-                print(f"⏭️ Bỏ qua thông điệp (op không phải 'c'): {payload}")
+                print(f"Bỏ qua thông điệp (op không phải 'c'): {payload}")
                 continue
             transaction_data = json.loads(payload.get('after'))  # Parse chuỗi JSON trong 'after'
             if not transaction_data:
-                print("⚠️ Không có transaction_data trong payload")
+                print("Không có transaction_data trong payload")
                 continue
             user_id = transaction_data.get('user_id')
             user_info = get_user_info(db, user_id)
@@ -53,9 +53,9 @@ def process_stream():
                 "user_city": user_info['city']
             }
             sink_collection.insert_one(enriched_record)
-            print(f"✅ Đã làm giàu và lưu: User '{user_info['name']}' ({user_info['city']}) mua {enriched_record['amount']}")
+            print(f"Đã làm giàu và lưu: User '{user_info['name']}' ({user_info['city']}) mua {enriched_record['amount']}")
         except Exception as e:
-            print(f"❌ Lỗi khi xử lý thông điệp: {e}")
+            print(f"Lỗi khi xử lý thông điệp: {e}")
 
     mongo_client.close()
 
