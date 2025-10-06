@@ -64,7 +64,7 @@ data_enrichment_system/
 
    ```bash
    git clone https://github.com/hpjat237/demo_truyendulieu.git
-   cd data_enrichment_system
+   cd demo_truyendulieu
    ```
 
 2. **Khởi động các container**:
@@ -111,10 +111,7 @@ data_enrichment_system/
    curl http://localhost:8083/connectors/mongodb-connector/status
    ```
 
-   > **Kỳ vọng**: Trạng thái `RUNNING`. Nếu gặp lỗi, kiểm tra log:
-   > ```bash
-   > docker logs connect
-   > ```
+   > **Kết quả**: Trạng thái `RUNNING`.
 
 ### Chạy các script Python
 
@@ -124,7 +121,7 @@ data_enrichment_system/
    docker exec -it python-app python /app/init_data.py
    ```
 
-   **Kỳ vọng**: Chèn 3 bản ghi (Alice, Bob, Charlie) vào `mydatabase.users`.
+   **Kết quả**: Chèn các bản ghi vào `mydatabase.users`.
    
 <img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/05091b92-dcfe-4142-99aa-66b35a41773e" />
 
@@ -135,7 +132,7 @@ data_enrichment_system/
    ```
 <img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/4ebbd6d1-b1a7-492b-aedc-b9cf52255813" />
 
-   **Kỳ vọng**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
+   **Kết quả**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
 
 10. **Làm giàu dữ liệu** (mở terminal riêng):
 
@@ -144,7 +141,7 @@ data_enrichment_system/
    ```
 <img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/2f39194b-3a03-4f78-908a-f2d4857564f2" />
 
-   **Kỳ vọng**: Đọc dữ liệu từ topic `cdc.mydatabase.transactions`, làm giàu, và lưu vào `mydatabase.enriched_transactions`.
+   **Kết quả**: Đọc dữ liệu từ topic `cdc.mydatabase.transactions`, làm giàu, và lưu vào `mydatabase.enriched_transactions`.
 
 
 ### Kiểm tra kết quả
@@ -163,7 +160,7 @@ data_enrichment_system/
     exit
     ```
 
-    **Kỳ vọng**:
+    **Kết quả**:
     - `users`: 3 bản ghi (Alice, Bob, Charlie).
     - `transactions`: Các giao dịch với timestamp +07:00.
     - `enriched_transactions`: Dữ liệu làm giàu với `user_name` và `user_city`.
@@ -175,48 +172,15 @@ data_enrichment_system/
     docker exec -it connect /kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic cdc.mydatabase.transactions --from-beginning
     ```
 
-    **Kỳ vọng**: Thấy các thông điệp JSON từ Debezium.
+    **Kết quả**: Thấy các thông điệp JSON từ Debezium.
 
----
+12. **Clean hệ thống**:
 
-## Lưu ý
-
-- Timestamp trong MongoDB được lưu ở múi giờ +07:00 (ICT) nhờ sử dụng `pytz` trong `transaction_streamer.py`.
-- Nếu gặp lỗi `getaddrinfo failed`, kiểm tra `docker-compose.yml` để đảm bảo port mapping (`27017:27017`, `9093:9093`, `8083:8083`).
-- Nếu topic `cdc.mydatabase.transactions` rỗng, kiểm tra log `connect` và trạng thái replica set MongoDB.
-
----
-
-## Khắc phục sự cố
-
-- **Connector không chạy**:
-  - Đảm bảo plugin `debezium-connector-mongodb` đã cài trong container `connect`:
+    Sau khi chạy demo xong, bạn có thể dọn dẹp tài nguyên để tránh chiếm dung lượng:
+    
     ```bash
-    docker exec -it connect bash
-    ls /kafka/connect
+    docker-compose down -v
     ```
-  - Cài lại plugin nếu cần:
-    ```bash
-    curl -O https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/2.3.0.Final/debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    tar -xzf debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz -C /kafka/connect
-    rm debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    exit
-    docker-compose restart connect
-    ```
-
-- **Không có dữ liệu trong topic**:
-  - Reset offset consumer group:
-    ```bash
-    docker exec -it connect /kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:9092 --group enrichment_group --reset-offsets --to-earliest --topic cdc.mydatabase.transactions --execute
-    ```
-
-- **Collection `enriched_transactions` rỗng**:
-  - Thêm debug vào `stream_processor.py`:
-    ```python
-    print(f"Received message: {message.value}")
-    ```
-  - Kiểm tra topic và log `connect`.
-
 ---
 
 ## Công nghệ sử dụng
