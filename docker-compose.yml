@@ -57,6 +57,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 20s
+
   python-app:
     image: python:3.9
     container_name: python-app
@@ -68,6 +69,22 @@ services:
       - mongodb
       - kafka
       - connect
+    networks:
+      - default
+
+  spark:
+    image: bitnami/spark:3.4.0
+    container_name: spark
+    ports:
+      - "8080:8080"  # Spark UI
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark
+    volumes:
+      - ./:/app
+    depends_on:
+      - kafka
+      - mongodb
     networks:
       - default
 
