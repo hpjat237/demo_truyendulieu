@@ -140,7 +140,8 @@ data_enrichment_system/
    docker exec -it python-app python /app/transaction_streamer.py
    ```
 
-   **Kỳ vọng**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
+   <img width="1102" height="485" alt="Screenshot 2025-10-08 000304" src="https://github.com/user-attachments/assets/f32aafca-4338-4b9d-a592-3d738b66d793" />
+
 
 10. **Làm giàu dữ liệu** (mở terminal riêng):
 
