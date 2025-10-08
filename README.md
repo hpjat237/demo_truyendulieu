@@ -101,7 +101,7 @@ data_enrichment_system/
 
    ```bash
    docker exec -it spark bash
-   pip install pymongo
+   pip install pymongo pytz
    exit
    ```
 
@@ -243,53 +243,4 @@ Script `stream_processor.py` thực hiện bước **Transform** trong quy trìn
 - **Python**: 3.9 (pymongo, kafka-python, pytz, pyspark)
 - **MongoDB Spark Connector**: 10.1.1
 - **Docker & Docker Compose**
-
----
-
-## Lưu ý
-
-- Timestamp trong MongoDB được lưu ở múi giờ +07:00 (ICT) nhờ sử dụng `pytz` trong `transaction_streamer.py`.
-- Nếu gặp lỗi `getaddrinfo failed`, kiểm tra `docker-compose.yml` để đảm bảo port mapping (`27017:27017`, `9093:9093`, `8083:8083`, `8080:8080`).
-- Nếu topic `cdc.mydatabase.transactions` rỗng, kiểm tra log `connect` và trạng thái replica set MongoDB.
-
----
-
-## Khắc phục sự cố
-
-- **Connector không chạy**:
-  - Đảm bảo plugin `debezium-connector-mongodb` đã cài trong container `connect`:
-    ```bash
-    docker exec -it connect bash
-    ls /kafka/connect
-    ```
-  - Cài lại plugin nếu cần:
-    ```bash
-    curl -O https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/2.3.0.Final/debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    tar -xzf debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz -C /kafka/connect
-    rm debezium-connector-mongodb-2.3.0.Final-plugin.tar.gz
-    exit
-    docker-compose restart connect
-    ```
-
-- **Không có dữ liệu trong topic**:
-  - Reset offset consumer group:
-    ```bash
-    docker exec -it connect /kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:9092 --group enrichment_group --reset-offsets --to-earliest --topic cdc.mydatabase.transactions --execute
-    ```
-
-- **Collection `enriched_transactions` rỗng**:
-  - Kiểm tra log Spark:
-    ```bash
-    docker logs spark
-    ```
-  - Thêm debug vào `stream_processor.py`:
-    ```python
-    transaction_df.show()  # In dữ liệu giao dịch
-    users_df.show()       # In dữ liệu người dùng
-    enriched_df.show()    # In dữ liệu làm giàu
-    ```
-
-- **Lỗi thiếu thư viện Spark**:
-  - Đảm bảo `spark.jars.packages` trong `stream_processor.py` chứa `org.mongodb.spark:mongo-spark-connector_2.12:10.1.1,org.apache.spark:spark-streaming-kafka-0-10_2.12:3.4.0`.
-
 ---

@@ -13,7 +13,7 @@ def stream_transactions():
     db = client[DB_NAME]
     transactions_collection = db[TRANSACTIONS_COLLECTION]
     
-    print("⏳ Bắt đầu giả lập luồng giao dịch...")
+    print("Bắt đầu giả lập luồng giao dịch...")
     
     # Đặt múi giờ +07:00 (ICT)
     tz = pytz.timezone('Asia/Ho_Chi_Minh')
