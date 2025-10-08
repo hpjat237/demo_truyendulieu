@@ -151,14 +151,7 @@ data_enrichment_system/
 
     ```bash
     docker exec -it spark spark-submit /app/stream_processor.py
-    ```
-
-    <img width="1446" height="675" alt="Screenshot 2025-10-08 130819" src="https://github.com/user-attachments/assets/0656aab8-3f1a-40d7-9603-f505394e3593" />
-
-    <img width="1452" height="692" alt="Screenshot 2025-10-08 090348" src="https://github.com/user-attachments/assets/b76516d4-8331-4ff2-bc93-5fade3b7958a" />
-
-    <img width="1085" height="601" alt="Screenshot 2025-10-08 162751" src="https://github.com/user-attachments/assets/d3e444a2-792e-4bb7-9d3c-54aa9473e100" />
-    
+    ```    
     <img width="647" height="530" alt="Screenshot 2025-10-08 162716" src="https://github.com/user-attachments/assets/1bdb6c4a-de85-4bfc-8e36-6eb0f921f886" />
 
 ### Kiểm tra kết quả
@@ -176,11 +169,7 @@ data_enrichment_system/
     db.enriched_transactions.find().pretty()
     exit
     ```
-
-    <img width="1408" height="656" alt="Screenshot 2025-10-08 084404" src="https://github.com/user-attachments/assets/4ef73077-1f9b-4f11-9477-5002c39c035d" />
-    <img width="796" height="673" alt="Screenshot 2025-10-08 084647" src="https://github.com/user-attachments/assets/8e9ed717-ad6a-4031-a645-201de559016d" />
-
-
+    
 12. **Kiểm tra dữ liệu trong Kafka topic**:
 
     ```bash
