@@ -1,4 +1,3 @@
----
 # Hệ thống làm giàu dữ liệu thời gian thực
 
 ## Giới thiệu
@@ -77,6 +76,7 @@ data_enrichment_system/
    > ```bash
    > docker ps
    > ```
+   <img width="1460" height="361" alt="Screenshot 2025-10-08 083720" src="https://github.com/user-attachments/assets/ce9ac719-fd13-4f75-9b92-c037799230ff" />
 
 3. **Khởi tạo replica set cho MongoDB**:
 
@@ -88,6 +88,7 @@ data_enrichment_system/
    rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'mongodb:27017' }]})
    exit
    ```
+   <img width="1452" height="652" alt="Screenshot 2025-10-08 083751" src="https://github.com/user-attachments/assets/07c0cd72-cb0d-41e8-9795-27b9ed4a506a" />
 
 4. **Cài đặt thư viện Python trong container `python-app`**:
 
@@ -96,6 +97,7 @@ data_enrichment_system/
    pip install pymongo kafka-python pytz
    exit
    ```
+   <img width="1450" height="537" alt="Screenshot 2025-10-08 083838" src="https://github.com/user-attachments/assets/193b87d6-1317-4e20-a0f2-d71fc7f24546" />
 
 5. **Cài đặt thư viện trong container `spark`**:
 
@@ -104,6 +106,7 @@ data_enrichment_system/
    pip install pymongo pytz
    exit
    ```
+   <img width="1457" height="381" alt="Screenshot 2025-10-08 083946" src="https://github.com/user-attachments/assets/4142b367-817d-4eed-985f-5a54f9b87159" />
 
 ### Đăng ký Debezium Connector
 
@@ -118,6 +121,7 @@ data_enrichment_system/
    ```bash
    curl http://localhost:8083/connectors/mongodb-connector/status
    ```
+   <img width="1452" height="280" alt="Screenshot 2025-10-08 084021" src="https://github.com/user-attachments/assets/d8029d08-7765-476d-9ebd-b85ecfa4e108" />
 
    > **Kỳ vọng**: Trạng thái `RUNNING`. Nếu gặp lỗi, kiểm tra log:
    > ```bash
@@ -132,7 +136,7 @@ data_enrichment_system/
    docker exec -it python-app python /app/init_data.py
    ```
 
-   **Kỳ vọng**: Chèn 3 bản ghi (Alice, Bob, Charlie) vào `mydatabase.users`.
+    <img width="1408" height="656" alt="Screenshot 2025-10-08 084404" src="https://github.com/user-attachments/assets/4ef73077-1f9b-4f11-9477-5002c39c035d" />
 
 9. **Giả lập luồng giao dịch** (mở terminal riêng):
 
@@ -140,15 +144,15 @@ data_enrichment_system/
    docker exec -it python-app python /app/transaction_streamer.py
    ```
 
-   **Kỳ vọng**: Tạo các giao dịch mới trong `mydatabase.transactions`. Nhấn `Ctrl+C` để dừng.
+   <img width="1102" height="485" alt="Screenshot 2025-10-08 000304" src="https://github.com/user-attachments/assets/f32aafca-4338-4b9d-a592-3d738b66d793" />
+
 
 10. **Làm giàu dữ liệu** (mở terminal riêng):
 
     ```bash
     docker exec -it spark spark-submit /app/stream_processor.py
-    ```
-
-    **Kỳ vọng**: Đọc dữ liệu từ topic `cdc.mydatabase.transactions`, làm giàu bằng Spark Streaming và Spark SQL, lưu vào `mydatabase.enriched_transactions`.
+    ```    
+    <img width="647" height="530" alt="Screenshot 2025-10-08 162716" src="https://github.com/user-attachments/assets/1bdb6c4a-de85-4bfc-8e36-6eb0f921f886" />
 
 ### Kiểm tra kết quả
 
@@ -165,12 +169,7 @@ data_enrichment_system/
     db.enriched_transactions.find().pretty()
     exit
     ```
-
-    **Kỳ vọng**:
-    - `users`: 3 bản ghi (Alice, Bob, Charlie).
-    - `transactions`: Các giao dịch với timestamp +07:00.
-    - `enriched_transactions`: Dữ liệu làm giàu với `user_name` và `user_city`.
-
+    
 12. **Kiểm tra dữ liệu trong Kafka topic**:
 
     ```bash
